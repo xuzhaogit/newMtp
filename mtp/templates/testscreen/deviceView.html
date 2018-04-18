@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% block scripts %}
+<script type="text/javascript" src="/static/js/socket.io-1.3.7.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cropper/3.1.4/cropper.min.js"></script>
+<script type="text/javascript" src="/static/js/deviceScreen.js"></script>
+<link rel="stylesheet" href="/static/css/deviceScreen.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/3.1.4/cropper.min.css" rel="stylesheet" />
+<script>
+
+timer=null
+function record(){
+    console.log('record')
+    commandList=[]
+    recordFlag=true
+}
+function stop(){
+    console.log('record stop')
+    recordFlag=false
+}
+function playback(){
+    $('#res').hide()
+    $('#load2').show()
+    console.log('playback')
+    commandList.forEach(function(d){
+        console.log(d)
+        actionSocket.emit(d[0],d[1])
+    })
+
+    var oTxt=$('#tt')
+    console.log(oTxt.text())
+    n= 0, timer=null;
+    //开始计时
+    function start() {
+        clearInterval(timer);
+        timer=setInterval(function () {
+            n++;
+            var m=parseInt(n/60);
+            var s=parseInt(n%60);
+            oTxt.text(toDub(m)+":"+toDub(s));
+        },1000/60);
+    };
+    start()
+    function toDub(n){
+        return n<10?"0"+n:""+n;
+    }
+    actionSocket.on
+
+}
+
+function autoDiffScreen(){
+    $('#res').hide()
+    $('#load2').show()
+
+    data=$('#img1').cropper('getData')
+
+
+    $.post($SCRIPT_ROOT + 'diff',{'name':'xz','namespace':namespace,'position':JSON.stringify(data),'method':'pixel'},function(data){
+        console.log(data)
+    })
+    if (recordFlag){
+        commandList.push(['diff',{ 'position':JSON.stringify(data) ,'namespace': namespace,'name':'xz',"method":'pixel'}])
+    }   
+}
+
+function autoMatchScreen(){
+    $('#res').hide()
+    $('#load2').show()
+    data=$('#img1').cropper('getData')
+    $.post($SCRIPT_ROOT + 'diff',{'name':'xz','namespace':namespace,'position':JSON.stringify(data),'method':'ddd'},function(data){
+        console.log(data)
+    })  
+    if (recordFlag){
+        commandList.push(['diff',{ 'position':JSON.stringify(data) ,'namespace': namespace,'name':'xz',"method":'ddd'}])
+    }     
+}
+
+
+function matchScreen(){
+    // $.get($SCRIPT_ROOT + 'diff4',{'namespace':namespace},function(data){
+    //     console.log(data)
+    // })
+    data=$('#img1').cropper('getData')
+    console.log(data,'data')
+    $.post($SCRIPT_ROOT + 'matchScreen',{'namespace':namespace,'position':JSON.stringify(data),'debug':false},function(data){
+        console.log(data)
+    })
+    // actionSocket.emit('restartMinicap',{'serial':serial})
+}
+function diffScreen(){
+    data=$('#img1').cropper('getData')
+    $.post($SCRIPT_ROOT + 'diffScreen',{'namespace':namespace,'position':JSON.stringify(data),'debug':true},function(data){
+        console.log(data)
+    })
+}
+
+function imgg(){
+    // console.log('aaaa')
+    $.get($SCRIPT_ROOT + 'screenShot',{'namespace':namespace},function(data){
+        console.log('bbbb')
+        // console.log(data)
+        // $("#img1").attr("src","data:image/jpeg;base64,"+data);
+        // var blob = new Blob([data], {
+        //     type: 'image/jpeg'
+        // })
+        // var img = document.createElement("img");
+        var img1=document.getElementById("img1")
+        // console.log(img,"img")
+        // console.log(img1,"img1")
+        img1.style.height="540px"
+        // img1.style.width="800px"
+        // // img.attr('id','adsad')
+        // img.id='dad'
+        // img.onload=function() {
+        //     URL.revokeObjectURL(img.src); 
+        // }
+        img1.src ="data:image/jpeg;base64,"+data
+        console.log(img1.style.width,'dasd')
+        cropper=$('#img1').cropper({
+            viewMode:2,
+            // aspectRatio: 16 / 9,
+            // zoomable:false,
+
+            crop: function(e) {
+            },
+            // zoom:1,
+                // minCanvasHeight:"500px",
+            });
+            // $('#img1').cropper('zoom',1)
+            $('#img1').cropper('replace',"data:image/jpeg;base64,"+data)
+    })
+}
+
+// function wake(){
+//     console.log('touch restart')
+//     // actionSocket.emit('wake',{'serial':serial})
+//     $.getJSON('http://192.168.150.8:7889/testscreen/deviceview?serial=bc766a71',function(data){
+//         console.log(data)
+//     })
+// }
+</script>
+{% endblock %}
+{% block page_content%}
+<p>{{wtf}}</p>
+<div class='page_header'>
+<button class="btn btn-primary" onclick="record()">record</button>
+<button class="btn btn-primary" onclick="stop()">stop</button>
+<button class="btn btn-primary" onclick="playback()">playback</button>
+<button class="btn btn-primary" onclick="matchScreen()"">matchScreen</button>
+<button class="btn btn-primary" onclick="diffScreen()"">diffScreen</button>
+<button class="btn btn-primary" onclick="autoDiffScreen()">autoDiffScreen</button>
+<button class="btn btn-primary" onclick="autoMatchScreen()">automatchScreen</button>
+<button class="btn btn-primary" onclick="imgg()">screenshot</button>
+
+<a class="btn btn-primary" href="http://127.0.0.1:7889/testscreen/deviceview?serial=bc766a71">wake</a>
+<h5>SreenDemo</h5>
+<!-- <div class="page_header" style="width:1800px"> -->
+    <div id="v1" class="col-md-3" style="padding:5;width:370px">
+    <!-- <div id="v1" class="col-md-3" style="padding:5;width:285px;"> 0113-->
+<!--         <div class="myloadder" id="myloadder" style="display:none;"><div class="spinner"></div></div> -->
+        <div id="panel" class="panel panel-primary" style="background:black;border:0;">
+            <div  class="panel-heading" style="background:black;border:0;height:35px;padding:7px 10px">
+                <button id="devicename" class="devicename-off" >小米5
+                    <span class="glyphicon glyphicon-ban-circle" aria-hidden="true " style="height:100%;color:red"></span>
+                </button>
+<!--                 <button id="devicename" class="devicename-off" >
+                    <span class="glyphicon glyphicon-ban-circle" aria-hidden="true " style="color:red;height:100%"></span>
+                </button> -->
+                <div style="float:right;">
+                    <button id="modex" class="menu-button" role="button" title="移除" onclick="removeDeviceView(this)">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true "></span>
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body" style="height:540px;padding:0">
+                <div class="myloadder" id="myloadder" style="display:none;"><div class="spinner"></div></div>
+            <!-- <div class="panel-body" style="height:450px;padding:0"> 0113-->
+                <device-screen id='hahaha'>
+                    <div class="positioner" style="transform: rotate(0deg);">
+                        <canvas id="canvas" class="screen" "></canvas>
+                            <canvas width="1 " height="1 " class="hacky-stretcher "></canvas>
+                    </div>
+                    <input type="password " tabindex="40 " accesskey="C " autocorrect="off " autocapitalize="off " focus-element="$root.screenFocus ">
+                </device-screen>
+                <div  role="group " aria-label="... ">
+                    <a  id="menu" class="btn menu-button " >
+                        <span class="glyphicon glyphicon-menu-hamburger " aria-hidden="true "></span>
+                    </a>
+                    <a id="home" class="btn menu-button-home" >
+                        <span class="glyphicon glyphicon-home " aria-hidden="true "></span>
+                    </a>
+                    <a  id="back" class="btn menu-button " >
+                        <span class="glyphicon glyphicon-menu-left " aria-hidden="true "></span>
+                    </a>
+                </div>
+            </div>
+            <div style="background:white " >
+               <div class="btn-toolbar " role="toolbar " aria-label="... " style="margin:0px;height:100%; ">
+                    <div role="group " aria-label="... " style="margin:0px;width:100%; ">
+                        <a class="btn tool-button " id="power" >
+                            <span class="glyphicon glyphicon-off " aria-hidden="true "></span>
+                        </a>
+                        <a class="btn tool-button "  id="volumeOff">
+                            <span class="glyphicon glyphicon-volume-off " aria-hidden="true "></span>
+                        </a>
+                        <a class="btn tool-button " id="volumeDown">
+                            <span class="glyphicon glyphicon-volume-down " aria-hidden="true "></span>
+                        </a>
+                        <a class="btn tool-button " id="volumeUp">
+                            <span class="glyphicon glyphicon-volume-up " aria-hidden="true "></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id='imgs' class="col-md-3" style="height:590px;width:400px">
+       <div>
+        <div  id="load2" class="span" style="height:25px;display: none">
+            <div class="magnifier"></div>
+        </div>
+        <a id='res' class="btn" style="display:none">
+            <!-- <span class="glyphicon glyphicon-ok" aria-hidden="true "></span> -->
+        </a>
+        <p id='tt' style="padding:0px;margin:0px;display:none">00:00</p>
+    </div>       
+         <img id='img1'>
+    </div>
+
+
+    <!-- {"x":750.0370270600062,"y":187.64655953548117,"width":96.16974119275487,"height":54.09547942092461,"rotate":0,"scaleX":1,"scaleY":1}-->
+<!-- <device-screen id='deviceScreen' style="height:600px;width:360px">
+    <div class="positioner" style="transform: rotate(0deg);">
+        <canvas id="canvas" class="screen" "></canvas>
+            <canvas width="1" height="1" class="hacky-stretcher"></canvas>
+    </div>
+    <input  tabindex="40" accesskey="C" autocorrect="off" autocapitalize="off" focus-element="$root.screenFocus">
+</device-screen> -->
+
+<!-- </div> -->
+{% endblock %}

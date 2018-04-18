@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block title %}首页{% endblock %}
+{% block scripts %}
+<script>
+function jisuan(){
+    try {
+    tc=parseInt($('#i1').val())
+    st=parseInt($('#i2').val())
+    }
+    catch(err){
+         alert(123) // 可执行
+    }
+
+    per=$('#i3').val()
+    grade=$('#i4').val()
+
+    gtc1=7599
+    gtc2=7399
+    gtc3=7399
+
+    gst1=6199
+    gst2=5799
+    gst3=5599
+
+    car=7999
+    ap=3999
+    switch(grade){
+    case "初一":
+        var gtc=gtc1
+        var gst=gst1
+        var d=gtc1*tc+gst1*st+car+ap
+        var t=d*per
+        break;
+    case "高一":
+        var gtc=gtc1
+        var gst=gst1
+        var d=gtc1*tc+gst1*st+car+ap
+        var t=d*per
+        break;
+    case "初二":
+        var gtc=gtc2
+        var gst=gst2
+        var d=gtc2*tc+gst2*st+car+ap
+        var t=d*per
+        break;
+    case "高二":
+        var gtc=gtc2
+        var gst=gst2
+        var d=gtc2*tc+gst2*st+car+ap
+        var t=d*per
+        break;
+    case "初三":
+        var gtc=gtc3
+        var gst=gst3
+        var d=gtc3*tc+gst3*st+car+ap
+        var t=d*per
+        break;
+    case "高三":
+        var gtc=gtc3
+        var gst=gst3
+        var d=gtc3*tc+gst3*st+car+ap
+        var t=d*per
+        break;
+    }
+    d2=1799*tc+(1399+1099)*st+5099+2999
+    t2=d2*per
+    d3=d-d2
+    t3=d3*per
+    x=parseInt(d3/(2*tc+st))
+    y=(d3-(x*st))/tc
+    text="<table class='table table-bordered'><thead><tr class='active'><th colspan='9'>按教师／学生系统</th></tr><tr><th>年级</th><th>教师系统</th><th>数量</th><th>学生系统</th><th>数量</th><th>充电车</th><th>无线ap</th><th>总价</th><th>折扣后总价</th></tr></thead><tbody><tr><th>"+grade+"</th><td>"+gtc+"</td><td>"+tc+"</td><td>"+gst+"</td><td>"+st+"</td><td>7999</td><td>3999</td><td>"+d+"</td><td>"+t+"</td></tr></tbody></table><br>"+
+    "<table class='table table-bordered'><thead><tr class='active'><th colspan='9'>按软／硬件</th></tr><tr><th>类型</th><th>教师平板</th><th>数量</th><th>学生平板+手写笔</th><th>数量</th><th>充电车</th><th>无线ap</th><th>总价</th><th>折扣后总价</th></tr></thead><tbody><tr><th>硬件</th><td>1799</td><td>"+tc+"</td><td>1399+1099</td><td>"+st+"</td><td>5099</td><td>2999</td><td>"+d2+"</td><td>"+t2+"</td></tr>"+"<tr><th>软件</th><td>"+'/'+"</td><td>"+'/'+"</td><td>"+'/'+"</td><td>"+'/'+"</td><td>／</td><td>／</td><td>"+d3+"</td><td>"+t3+"</td></tr></tbody></table>"
+
+    $('#aaa').html(text)
+
+}
+</script>
+{% endblock %}
+{% block page_content %}
+<div class='page_header'>
+<h2>报价</h2>
+<!-- <div style="height:800px"></div> -->
+
+<div>
+  <!-- <div class="col-lg-6"> -->
+<div class="input-group ">
+  <span class="input-group-addon" id="sizing-addon2">教师数量</span>
+  <input id='i1' type="text" class="form-control" placeholder="教师数量" aria-describedby="sizing-addon2">
+<!-- </div> -->
+<!-- <div class="input-group col-lg-3"> -->
+  <span class="input-group-addon" id="sizing-addon2">学生数量</span>
+  <input id='i2' type="text" class="form-control" placeholder="学生数量" aria-describedby="sizing-addon2">
+
+<!-- </div> -->
+  <!-- </div>/.col-lg-6 -->
+  <!-- <div class="col-lg-6"> -->
+    <!-- <div class="input-group col-lg-3"> -->
+    <span class="input-group-addon" id="sizing-addon2">折扣率</span>
+      <input id="i3" type="text" class="form-control" placeholder="折扣率">
+      <div class="input-group-btn" style="width:18%">
+    <!--     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">年级 <span class="caret"></span></button> -->
+<select class="form-control" id='i4'>
+  <option>初一</option>
+  <option>初二</option>
+  <option>初三</option>
+  <option>高一</option>
+  <option>高二</option>
+  <option>高三</option>
+</select>
+      </div>
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" onclick="jisuan()">go!</button>
+      </span>
+
+<!-- /input-group -->
+<!--   </div>/.col-lg-6 -->
+</div><!-- /.row -->
+<br>
+<div id='aaa'>
+
+<!-- <table class="table table-bordered">
+<thead>
+<tr>
+<th>年级</th>
+<th>教师系统</th>
+<th>数量</th>
+<th>学生系统</th>
+<th>充电车</th>
+<th>无线ap</th>
+<th>总价</th>
+<th>折扣后总价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <th>初一／高一</th>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+</tr>
+<tr>
+    <th>初二／高二</th>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+</tr>
+<tr>
+    <th>初三／高三</th>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+    <td>7599</td>
+</tr>
+</tbody>
+
+
+</table> -->
+
+</div>
+
+</div>
+{% endblock %}

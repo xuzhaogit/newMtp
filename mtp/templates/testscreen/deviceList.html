@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block scripts %}
+<script type="text/javascript" src="/static/js/socket.io-1.3.7.js"></script>
+<script>
+console.log('avc')
+    datasocket=io.connect("http://0.0.0.0:8000/screen",{ 'forceNew': true });
+    datasocket.on('imgdata',function(data) {
+        console.log('avc')
+    })
+
+
+</script>
+
+
+
+<style>
+.caption {
+    padding:0px 0px 5px 5px;
+}  
+.caption p{
+    margin-bottom:6px;
+}        
+</style>
+{% endblock %}
+{% block page_content%}
+    <p>hahahha</p>
+
+
+<div class='row'>
+
+{%for i in range(10)%}
+<div class="col-md-3">
+  <div class="panel panel-default" style="padding:0px" >
+    <div class="panel-heading">djaksdhakjdhashd</div>
+    <div class="panel-body" style='padding:5px 5px 0px 5px'>
+        <div class="thumbnail" style="display: flex;margin:5px 0px;border:0px;padding-bottom: 0px">
+          <img style="width:80px;height:140px;margin:0px" src="http://matp-test.cn-hangzhou.oss.aliyun-inc.com/online/deviceType134.JPG" alt="...">
+          <div class="caption" style="padding:0px 0px 5px 10px">
+            <p>品牌: 三星</p>
+            <p>型号：NX523J</p>
+            <p>系统：android OS 5.1.1</p>
+            <p>分辨率：1920x1080</p>
+            <p style="margin:8px 0px 0px 0px"><a href="#" class="btn btn-primary" style="width:100%" role="button">使用</a></p>
+          </div>
+        </div>
+     </div>
+  </div>
+</div>
+{%endfor%}
+
+</div>
+
+{% endblock %}

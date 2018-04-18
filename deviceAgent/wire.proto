@@ -1,0 +1,49 @@
+syntax = "proto2";
+
+
+
+
+enum MessageType {
+  PROVIDER_REGISTER_MSG = 1;
+  DEVICE_PRESENT_MSG = 2;
+  DEVICE_ABSENT_MSG = 3;
+  DEVICE_STATUS_MSG = 4;
+  PROVIDER_HEARTBEAT_MSG = 5;
+  STF_NOTIFY_MSG = 6;
+}
+
+message Envelope {
+  required MessageType type = 1;
+  required bytes message = 2;
+}
+
+message StfNotify{
+  required string type = 1;
+  required string status = 2;
+}
+
+
+message ProviderRegisterMsg{
+  required string hostname = 1;
+  required string host = 2;
+}
+
+message ProviderHeartbeatMsg {
+  required string host = 1;
+  required string deviceList = 2;
+}
+
+message DevicePresentMsg {
+  required string serial = 1;
+  required string status = 2;
+}
+
+message DeviceStatusMsg {
+  required string serial = 1;
+  required string status = 2;
+}
+
+message DeviceAbsentMsg {
+  required string serial = 1;
+}
+
